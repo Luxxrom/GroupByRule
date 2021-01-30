@@ -1,50 +1,60 @@
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class GroupRule {
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws IOException {
+        List<String> lines1 = Files.readAllLines(Paths.get("\\\\Dom-81\\c$\\JAVA_IdeaProjects\\GroupByRule\\A123.txt"), StandardCharsets.UTF_8);
+//        FileInputStream file = new FileInputStream("\\\\Dom-81\\c$\\JAVA_IdeaProjects\\GroupByRule\\A123.txt");
+//        InputStreamReader fr = new InputStreamReader(file);
+//       BufferedReader reader = new BufferedReader(fr);
 
-        FileInputStream file = new FileInputStream("\\\\TMN-STS-UI4\\C$\\JAVA_Projects\\GroupByRule\\A123.txt");
-        InputStreamReader fr = new InputStreamReader(file);
-        BufferedReader reader = new BufferedReader(fr);
+//        ArrayList<String> textLines1 = null;
+//        ArrayList<String> textRoles1 = null;
 
-        String[] textLines = new String[(int) (reader.lines().count() - 1)];
-        String[] textRoles = new String[5];
+        String[] textLines = new String[(int) (lines1.size())-6];
+        String[] textRoles = new String[4];
 
-        try {
-            // считаем сначала первую строку
-            int i = 0;
-            boolean lines = false, roles = false;
+        boolean lines = false, roles = false;
 
-            String line = reader.readLine();
-            StringBuilder sb = new StringBuilder();
-            while (line != null) {
-//                System.out.println(line);
-                // считываем остальные строки в цикле
-                line = reader.readLine();
-                if (line.equals("textLines:")) {
-                    lines = true;
-                    roles = false;
-                } else if (line.equals("roles:")) {
-                    roles = true;
-//                lines = false;
-                }
-                if (roles) {
-                    textRoles[i] = line;
-                }
-                if (lines) {
-                    textLines[i] = line;
-                }
-                i++;
+        for (int i = 0, j = 0; i < lines1.size();  i++) {
+//            i++;
+//            // считаем сначала первую строку
+//            int i = 0;
+
+//            String line = reader.readLine();
+//            StringBuilder sb = new StringBuilder();
+//            while (line != null) {
+//            System.out.println(lines1.get(i));
+//                // считываем остальные строки в цикле
+//                line = reader.readLine();
+            if (lines1.get(i).equals("textLines:")) {
+                lines = true;
+                roles = false;
+                continue;
+            } else if (lines1.get(i).equals("roles:")) {
+                roles = true;
+                lines = false;
+                continue;
             }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            if (roles) {
+//                assert textRoles1 != null;
+                textRoles[i-1] = lines1.get(i);
+            }
+            if (lines) {
+                textLines[j] = lines1.get(i);
+                j++;
+            }
+//
         }
 
+//        textRoles1.toArray(textRoles);
+//        textLines1.toArray(textLines);
         System.out.println(printTextPerRole(textRoles, textLines));
     }
 
